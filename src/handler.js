@@ -16,7 +16,7 @@ const handler = (request, response) => {
   ++data.counter
 
   response.writeHead(200, { "Content-Type": "text/plain" })
-  response.end(`${data.counter}`)
+  response.end(`:${data.counter}`)
 }
 
 export default handler
