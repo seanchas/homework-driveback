@@ -1,13 +1,15 @@
+const THRESHOLD = 60 * 1000
+
 const data = {
-  tick: null,
+  tick: 0,
   counter: 0,
 }
 
 const handler = (request, response) => {
-  const ticks = Math.floor(Date.now() / 1000 / 60)
+  const tick = Date.now()
 
-  if (data.ticks !== ticks) {
-    data.ticks = ticks
+  if (tick - data.tick >= THRESHOLD) {
+    data.tick = tick
     data.counter = 0
   }
 
