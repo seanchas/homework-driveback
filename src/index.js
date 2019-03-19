@@ -3,4 +3,4 @@ import handler from "./handler"
 
 const server = http.createServer(handler)
 
-server.listen(process.env.PORT || 3000)
+server.listen(8080)

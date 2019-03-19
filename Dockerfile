@@ -6,5 +6,5 @@ RUN yarn && yarn build
 FROM node:8
 WORKDIR /app
 COPY --from=build /app/dist .
-EXPOSE 3000
+EXPOSE 8080
 CMD ["node", "index"]
