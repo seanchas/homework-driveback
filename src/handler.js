@@ -15,7 +15,7 @@ const handler = (request, response) => {
 
   ++data.counter
 
-  response.writeHead(200, { "Content-Type": "text/plain" })
+  response.writeHead(200, { "Content-Type": "text/plain", "X-Tick": data.tick })
   response.end(`${data.counter}`)
 }
 
