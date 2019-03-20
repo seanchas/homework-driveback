@@ -1,22 +1,14 @@
-const THRESHOLD = 60 * 1000
+import { getPageHits } from "./store"
 
-const data = {
-  tick: 0,
-  counter: 0,
-}
+const handler = async (request, response) => {
+  const { count, timestamp } = await getPageHits()
 
-const handler = (request, response) => {
-  const tick = Date.now()
+  response.writeHead(200, {
+    "Content-Type": "text/plain",
+    "X-Timestamp": timestamp,
+  })
 
-  if (tick - data.tick >= THRESHOLD) {
-    data.tick = tick
-    data.counter = 0
-  }
-
-  ++data.counter
-
-  response.writeHead(200, { "Content-Type": "text/plain", "X-Tick": data.tick })
-  response.end(`${data.counter}`)
+  response.end(`${count}`)
 }
 
 export default handler
