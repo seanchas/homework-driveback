@@ -2,9 +2,14 @@
 // instead of global variable
 
 const DATAREF = {
-  current: []
+  current: [],
 }
 
+const TOTALREF = {
+  current: 0,
+}
+
+const STEP = 1000
 const THRESHOLD = 60 * 1000
 
 const getHead = () => {
@@ -21,40 +26,37 @@ const removeStale = timestamp => {
 
   if (timestamp - head.timestamp >= THRESHOLD) {
     DATAREF.current = []
+    TOTALREF.current = 0
     return
   }
 
   let tail = void 0
 
-  while(tail = getTail()) {
+  while ((tail = getTail())) {
     if (tail === void 0) break
     if (timestamp - tail.timestamp < THRESHOLD) break
     DATAREF.current = DATAREF.current.slice(0, -1)
+    TOTALREF.current -= tail.count
   }
 }
 
 const inc = timestamp => {
-   const head = getHead()
+  const head = getHead()
 
-   if (head === void 0 || timestamp !== head.timestamp) {
-     DATAREF.current = [{ count: 1, timestamp }].concat(DATAREF.current)
-     return
-   }
+  if (head === void 0 || timestamp !== head.timestamp)
+    DATAREF.current = [{ count: 0, timestamp }].concat(DATAREF.current)
 
-   DATAREF.current[0].count += 1
-}
-
-const calculate = () => {
-  return DATAREF.current.reduce((memo, { count }) => memo + count, 0)
+  DATAREF.current[0].count += 1
+  TOTALREF.current += 1
 }
 
 export const getPageHits = async () => {
   return new Promise(resolve => {
-    const timestamp = Math.floor(Date.now() / 1000) * 1000
+    const timestamp = Math.floor(Date.now() / STEP) * STEP
 
     removeStale(timestamp)
     inc(timestamp)
 
-    resolve({ count: calculate(), timestamp })
+    resolve({ count: TOTALREF.current, timestamp })
   })
 }
